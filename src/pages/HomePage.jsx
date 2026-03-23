@@ -58,7 +58,8 @@ function HomePage({ updateCartCount }) {
 
   return (
     <div>
-      <div style={{
+      {/* Hero Banner */}
+      <div className="hero-banner-container" style={{
         position: 'relative',
         width: '100%',
         height: '400px',
