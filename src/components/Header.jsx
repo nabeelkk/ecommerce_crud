@@ -39,16 +39,6 @@ function Header({ cartCount }) {
         </Link>
       </div>
 
-      <div className="search-bar">
-        <Search size={18} color="#696e79" />
-        <input 
-          type="text" 
-          placeholder="Search for products..." 
-          style={{ border: 'none', background: 'transparent', outline: 'none', marginLeft: '12px', width: '100%', fontSize: '0.9rem' }}
-          onKeyDown={handleSearch}
-        />
-      </div>
-
       <nav className={`nav-links ${isMobileMenuOpen ? 'open' : ''}`}>
         <NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}>Home</NavLink>
         <NavLink to="/products" className={({ isActive }) => isActive ? 'active' : ''}>Products list</NavLink>

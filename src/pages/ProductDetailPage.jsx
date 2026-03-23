@@ -74,9 +74,9 @@ function ProductDetailPage({ updateCartCount }) {
           <p style={{ fontSize: '1rem', color: '#535766', marginBottom: '2rem' }}><strong>Category:</strong> {product.category}</p>
 
           <button 
-            className="btn-primary" 
+            className="add-to-cart-btn" 
             onClick={handleAddToCart}
-            style={{ width: '100%', padding: '18px', fontSize: '1.1rem' }}
+            style={{ width: '100%', padding: '18px', fontSize: '1.1rem', marginTop: 'auto' }}
           >
             <ShoppingBag size={22} style={{ marginRight: '10px' }} /> ADD TO BAG
           </button>

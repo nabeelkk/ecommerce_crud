@@ -76,6 +76,7 @@ a {
 .logo-icon {
   background: linear-gradient(135deg, var(--myntra-pink), var(--myntra-orange));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   font-size: 1.8rem;
 }
@@ -358,24 +359,49 @@ a {
   padding: 12px;
   background: #fff;
   color: var(--myntra-pink);
-  border: 1px solid var(--myntra-pink);
-  font-weight: 700;
+  border: 2px solid var(--myntra-pink);
+  font-weight: 800;
   font-size: 0.95rem;
   text-transform: uppercase;
   cursor: pointer;
   margin-top: 1.2rem;
-  border-radius: 4px;
-  transition: all var(--transition-normal);
+  border-radius: 6px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
 }
 
-.product-card:hover .add-to-cart-btn {
-  background: var(--myntra-pink);
+.add-to-cart-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--myntra-pink) 0%, #ff5c8a 100%);
+  transition: all 0.4s ease;
+  z-index: -1;
+  border-radius: 4px;
+}
+
+.add-to-cart-btn:hover::before {
+  left: 0;
+}
+
+.add-to-cart-btn:hover {
   color: white;
-  box-shadow: 0 4px 12px rgba(255, 63, 108, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(255, 63, 108, 0.4);
+  border-color: transparent;
+}
+
+.add-to-cart-btn:active {
+  transform: scale(0.96);
 }
 
 /* Cart Page */
@@ -540,6 +566,32 @@ a {
   font-weight: 800;
   font-size: 1.3rem;
   color: var(--myntra-dark);
+}
+
+.checkout-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--myntra-pink) 0%, #ff5c8a 100%);
+  color: white;
+  border: none;
+  font-weight: 800;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 4px;
+  margin-top: 2rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(255, 63, 108, 0.4);
+  transition: all var(--transition-normal);
+}
+
+.checkout-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(255, 63, 108, 0.5);
+}
+
+.checkout-btn:active {
+  transform: translateY(0);
 }
 
 .empty-state {
