@@ -11,6 +11,11 @@ export const fetchProducts = async (category = '', search = '', sort = '') => {
   return response.data;
 };
 
+export const fetchProductById = async (id) => {
+  const response = await axios.get(`${API_BASE_URL}/products/${id}`);
+  return response.data;
+};
+
 export const addProduct = async (formData) => {
   const response = await axios.post(`${API_BASE_URL}/products/add`, formData, {
     headers: {

@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import ProductList from './pages/ProductList';
+import ProductDetailPage from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
 import AddProductPage from './pages/AddProductPage';
 import { fetchCart } from './api';
@@ -35,6 +36,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage updateCartCount={updateCartCount} />} />
             <Route path="/products" element={<ProductList updateCartCount={updateCartCount} />} />
+            <Route path="/products/:id" element={<ProductDetailPage updateCartCount={updateCartCount} />} />
             <Route path="/cart" element={<CartPage updateCartCount={updateCartCount} />} />
             <Route path="/add-product" element={<AddProductPage />} />
           </Routes>

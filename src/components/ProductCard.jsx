@@ -1,29 +1,66 @@
 import React from 'react';
 import { ShoppingBag } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 function ProductCard({ product, onAddToCart }) {
+  // Safe calculation for offer discount
+  const offerAmount = 500;
+  const originalPrice = product.price + offerAmount;
+  const discountPercentage = Math.round((offerAmount / originalPrice) * 100);
+
+  const handleCartClick = (e) => {
+    e.preventDefault(); // Stop Link navigation
+    e.stopPropagation();
+    onAddToCart(product._id);
+  };
+
   return (
-    <div className="product-card animate-fade">
+    <Link to={`/products/${product._id}`} className="product-card hover-lift" style={{ display: 'flex', flexDirection: 'column' }}>
       <div className="product-image-container">
-        <img src={product.image} alt={product.name} className="product-image" loading="lazy" />
+        <img 
+          src={product.image || 'https://via.placeholder.com/300x400?text=No+Image'} 
+          alt={product.name} 
+          className="product-image" 
+          loading="lazy" 
+        />
       </div>
-      <div className="product-info">
-        <h3 className="product-brand">{product.brand}</h3>
+      <div className="product-info" style={{ display: 'flex', flexDirection: 'column', height: '100%', flexGrow: 1 }}>
+        <h3 className="product-brand" style={{ textTransform: 'uppercase' }}>{product.brand}</h3>
         <p className="product-name" title={product.name}>{product.name}</p>
-        <p style={{fontSize: '0.8rem', color: '#535766', marginBottom: '8px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>{product.description}</p>
-        <div className="product-price">
+        
+        <p style={{
+          fontSize: '0.85rem', 
+          color: '#696e79', 
+          marginBottom: '12px', 
+          display: '-webkit-box', 
+          WebkitLineClamp: 2, 
+          WebkitBoxOrient: 'vertical', 
+          overflow: 'hidden',
+          lineHeight: '1.4',
+          flexGrow: 1
+        }}>
+          {product.description}
+        </p>
+
+        <div className="product-price" style={{ marginBottom: '8px' }}>
           Rs. {product.price}
-          <span>Rs. {product.price + 500}</span>
-          <span style={{color: '#ff905a', fontSize: '0.8rem', fontWeight: '700', marginLeft: '6px'}}>(Rs. 500 OFF)</span>
+          <span style={{ fontSize: '0.85rem', color: '#94969f', textDecoration: 'line-through', marginLeft: '6px', fontWeight: 500 }}>
+            Rs. {originalPrice}
+          </span>
+          <span className="discount-text" style={{ marginLeft: '8px' }}>
+            ({discountPercentage}% OFF)
+          </span>
         </div>
+        
         <button 
           className="add-to-cart-btn"
-          onClick={() => onAddToCart(product._id)}
+          onClick={handleCartClick}
+          style={{ marginTop: 'auto', zIndex: 10, position: 'relative' }}
         >
           <ShoppingBag size={18} /> Add to Cart
         </button>
       </div>
-    </div>
+    </Link>
   );
 }
 

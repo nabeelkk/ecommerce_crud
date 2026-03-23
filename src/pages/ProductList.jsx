@@ -35,9 +35,9 @@ function ProductList({ updateCartCount }) {
         setLoading(false);
       }
     };
-    
+
     const timer = setTimeout(() => {
-        loadProducts();
+      loadProducts();
     }, 300);
     return () => clearTimeout(timer);
   }, [selectedCategory, searchQuery, sortType]);
@@ -54,25 +54,23 @@ function ProductList({ updateCartCount }) {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+      <div className="product-list-header">
         <h1 className="page-title" style={{ marginBottom: 0 }}>
-          {selectedCategory ? `${selectedCategory} Clothing & Accessories` : 'All Products'} 
-          <span style={{color: '#535766', fontSize: '1rem', fontWeight: 400, marginLeft: '8px'}}>- {products.length} items</span>
+          {selectedCategory ? `${selectedCategory} Clothing & Accessories` : 'All Products'}
+          <span style={{ color: '#535766', fontSize: '1rem', fontWeight: 400, marginLeft: '8px' }}>- {products.length} items</span>
         </h1>
 
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <input 
-            type="text" 
-            placeholder="Search by name..." 
+        <div className="product-list-controls">
+          <input
+            type="text"
+            placeholder="Search by name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            style={{ padding: '10px 16px', borderRadius: '4px', border: '1px solid #eaeaec', width: '250px', outline: 'none' }}
           />
 
-          <select 
+          <select
             value={sortType}
             onChange={(e) => setSortType(e.target.value)}
-            style={{ padding: '10px 16px', borderRadius: '4px', border: '1px solid #eaeaec', outline: 'none', background: '#fff', fontWeight: '500'}}
           >
             <option value="">Sort By: Default</option>
             <option value="nameAsc">Sort By: Name (A-Z)</option>
@@ -81,17 +79,17 @@ function ProductList({ updateCartCount }) {
           </select>
         </div>
       </div>
-      
+
       <div className="filters">
-        <span style={{fontWeight: 700}}>FILTERS</span>
-        <button 
+        <span style={{ fontWeight: 700 }}>FILTERS</span>
+        <button
           className={`filter-btn ${selectedCategory === '' ? 'active' : ''}`}
           onClick={() => setSelectedCategory('')}
         >
           All
         </button>
         {categories.map(cat => (
-          <button 
+          <button
             key={cat}
             className={`filter-btn ${selectedCategory === cat ? 'active' : ''}`}
             onClick={() => setSelectedCategory(cat)}
@@ -102,13 +100,13 @@ function ProductList({ updateCartCount }) {
       </div>
 
       {loading ? (
-        <div style={{textAlign: 'center', padding: '100px 0'}}>Loading products...</div>
+        <div style={{ textAlign: 'center', padding: '100px 0' }}>Loading products...</div>
       ) : (
         <div className="product-grid">
           {products.map(product => (
-            <ProductCard 
-              key={product._id} 
-              product={product} 
+            <ProductCard
+              key={product._id}
+              product={product}
               onAddToCart={handleAddToCart}
             />
           ))}
