@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ShoppingBag, ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Check, ShieldCheck, Zap } from 'lucide-react';
 import { fetchProductById, addToCart } from '../api';
 import toast from 'react-hot-toast';
 
@@ -9,6 +9,7 @@ function ProductDetailPage({ updateCartCount }) {
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isAdded, setIsAdded] = useState(false);
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -16,7 +17,7 @@ function ProductDetailPage({ updateCartCount }) {
         const data = await fetchProductById(id);
         setProduct(data);
       } catch (error) {
-        toast.error('Product not found');
+        toast.error('Asset not found in database');
         navigate('/products');
       } finally {
         setLoading(false);
@@ -25,7 +26,11 @@ function ProductDetailPage({ updateCartCount }) {
     loadProduct();
   }, [id, navigate]);
 
-  if (loading) return <div style={{textAlign: 'center', padding: '100px 0'}}>Loading product details...</div>;
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="w-16 h-16 border-4 border-gray-200 border-t-brand rounded-full animate-spin"></div>
+    </div>
+  );
   if (!product) return null;
 
   const offerAmount = 500;
@@ -36,50 +41,81 @@ function ProductDetailPage({ updateCartCount }) {
     try {
       await addToCart(product._id);
       updateCartCount();
-      toast.success('Item added to bag');
+      setIsAdded(true);
+      setTimeout(() => setIsAdded(false), 2500);
+      toast.success('Successfully added to your bag');
     } catch (error) {
-      toast.error('Failed to add to bag');
+      toast.error('Failed to communicate with cart');
     }
   };
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', paddingBottom: '4rem' }}>
+    <div className="max-w-[1400px] mx-auto px-6 md:px-16 py-8 md:py-16 animate-fade-up">
       <button 
         onClick={() => navigate(-1)} 
-        style={{ background: 'none', border: 'none', color: '#535766', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', marginBottom: '2rem', fontWeight: 600 }}
+        className="group flex items-center gap-2 text-gray-500 hover:text-dark font-black tracking-widest uppercase text-xs mb-8 md:mb-12 transition-colors"
       >
-        <ArrowLeft size={20} /> Back to Products
+        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> 
+        Return to Catalog
       </button>
 
-      <div className="product-detail-container" style={{ display: 'flex', gap: '4rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-        <div style={{ flex: '1 1 400px', width: '100%', minWidth: '300px', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', backgroundColor: '#f5f5f6' }}>
-          <img src={product.image} alt={product.name} style={{ width: '100%', height: 'auto', display: 'block' }} />
+      <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 w-full relative">
+        <div className="w-full lg:w-1/2 rounded-3xl overflow-hidden bg-gray-100 shadow-[0_8px_32px_rgba(0,0,0,0.06)] relative sticky top-32 group">
+           <img 
+             src={product.image} 
+             alt={product.name} 
+             className="w-full h-auto object-cover transform transition-transform duration-[1.5s] group-hover:scale-110" 
+           />
+           <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-md px-4 py-2 font-black text-brand rounded-full shadow-lg border border-white">
+             {discountPercentage}% SPECIAL OFFER
+           </div>
         </div>
 
-        <div style={{ flex: '1 1 500px', minWidth: '300px' }}>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#282c3f', marginBottom: '8px', textTransform: 'uppercase' }}>{product.brand}</h1>
-          <h2 style={{ fontSize: '1.4rem', color: '#535766', fontWeight: 400, marginBottom: '2rem' }}>{product.name}</h2>
+        <div className="w-full lg:w-1/2 flex flex-col py-4">
+          <div className="flex flex-col gap-2">
+            <h1 className="text-6xl font-black text-dark uppercase tracking-tighter leading-none">{product.brand}</h1>
+            <h2 className="text-xl md:text-2xl text-gray-500 font-medium leading-relaxed mt-2">{product.name}</h2>
+          </div>
           
-          <div style={{ padding: '1rem 0', borderTop: '1px solid #eaeaec', borderBottom: '1px solid #eaeaec', marginBottom: '2rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '8px' }}>
-              <span style={{ fontSize: '1.8rem', fontWeight: 800, color: '#282c3f' }}>Rs. {product.price}</span>
-              <span style={{ fontSize: '1.2rem', color: '#94969f', textDecoration: 'line-through' }}>MRP Rs. {originalPrice}</span>
-              <span style={{ color: '#ff905a', fontSize: '1.2rem', fontWeight: 800 }}>({discountPercentage}% OFF)</span>
+          <div className="py-8 my-8 border-y border-gray-200 flex flex-col gap-4">
+            <div className="flex items-end gap-4 flex-wrap">
+              <span className="text-5xl font-black text-dark tracking-tighter">Rs. {product.price}</span>
+              <span className="text-xl text-gray-400 line-through font-semibold mb-1">MRP Rs. {originalPrice}</span>
             </div>
-            <p style={{ color: '#03a685', fontWeight: 700, fontSize: '0.9rem' }}>inclusive of all taxes</p>
+            <p className="text-brand font-black text-sm tracking-widest uppercase flex items-center gap-2">
+              <Zap size={16} fill="currentColor" /> inclusive of all taxes
+            </p>
           </div>
 
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1rem' }}>PRODUCT DETAILS</h3>
-          <p style={{ fontSize: '1rem', color: '#535766', lineHeight: 1.6, marginBottom: '2rem' }}>{product.description}</p>
-          <p style={{ fontSize: '1rem', color: '#535766', marginBottom: '2rem' }}><strong>Category:</strong> {product.category}</p>
+          <div className="mb-10">
+            <h3 className="text-sm font-black tracking-widest text-dark uppercase mb-4">The Details</h3>
+            <p className="text-gray-500 leading-loose text-lg font-medium">{product.description}</p>
+          </div>
+
+          <div className="mb-10">
+            <h3 className="text-sm font-black tracking-widest text-dark uppercase mb-4">Category Log</h3>
+            <span className="inline-block bg-white border-2 border-gray-100 px-6 py-2 rounded-full font-bold text-gray-600 shadow-sm">{product.category}</span>
+          </div>
 
           <button 
-            className="add-to-cart-btn" 
+            className={`w-full py-5 text-lg flex items-center justify-center uppercase tracking-widest font-black rounded-xl transition-all duration-300 shadow-xl ${
+              isAdded 
+                ? 'bg-green-500 text-white shadow-green-500/40 pointer-events-none transform scale-95' 
+                : 'bg-dark text-white hover:bg-brand hover:scale-[1.02] hover:-translate-y-1 shadow-black/20 hover:shadow-brand/40'
+            }`}
             onClick={handleAddToCart}
-            style={{ width: '100%', padding: '18px', fontSize: '1.1rem', marginTop: 'auto' }}
           >
-            <ShoppingBag size={22} style={{ marginRight: '10px' }} /> ADD TO BAG
+            {isAdded ? (
+              <><Check size={24} className="mr-3" /> Activated in Bag</>
+            ) : (
+              <>Purchase Item</>
+            )}
           </button>
+          
+          <div className="mt-8 flex items-center gap-4 text-gray-400 font-semibold justify-center">
+             <ShieldCheck size={20} />
+             <p className="text-sm tracking-wide">Secure encrypt-level 256-bit checkout</p>
+          </div>
         </div>
       </div>
     </div>

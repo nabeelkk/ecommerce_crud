@@ -29,10 +29,10 @@ function App() {
 
   return (
     <Router>
-      <div className="app-container">
+      <div className="flex flex-col min-h-screen bg-light">
         <Toaster position="top-right" />
         <Header cartCount={cartCount} />
-        <main className="main-content">
+        <main className="flex-1 w-full max-w-[1600px] mx-auto animate-fade-up">
           <Routes>
             <Route path="/" element={<HomePage updateCartCount={updateCartCount} />} />
             <Route path="/products" element={<ProductList updateCartCount={updateCartCount} />} />

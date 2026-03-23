@@ -35,10 +35,10 @@ function ProductList({ updateCartCount }) {
         setLoading(false);
       }
     };
-
+    
     const timer = setTimeout(() => {
-      loadProducts();
-    }, 300);
+        loadProducts();
+    }, 500);
     return () => clearTimeout(timer);
   }, [selectedCategory, searchQuery, sortType]);
 
@@ -46,50 +46,54 @@ function ProductList({ updateCartCount }) {
     try {
       await addToCart(productId);
       updateCartCount();
-      toast.success('Item added to bag');
+      toast.success('Added to collection');
     } catch (error) {
-      toast.error('Failed to add item');
+      toast.error('Request failed');
     }
   };
 
   return (
-    <div>
-      <div className="product-list-header">
-        <h1 className="page-title" style={{ marginBottom: 0 }}>
-          {selectedCategory ? `${selectedCategory} Clothing & Accessories` : 'All Products'}
-          <span style={{ color: '#535766', fontSize: '1rem', fontWeight: 400, marginLeft: '8px' }}>- {products.length} items</span>
+    <div className="px-6 md:px-16 py-8 md:py-12 animate-fade-up">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 w-full">
+        <h1 className="text-3xl md:text-5xl font-black text-dark tracking-tighter whitespace-nowrap">
+          {selectedCategory ? `${selectedCategory}` : 'All Products'}
+          <span className="text-gray-400 font-medium text-lg ml-4 block sm:inline mt-2 sm:mt-0 tracking-normal">
+            {products.length} Items Found
+          </span>
         </h1>
 
-        <div className="product-list-controls">
-          <input
-            type="text"
-            placeholder="Search by name..."
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+          <input 
+            type="text" 
+            placeholder="Search catalog..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            className="input-field w-full sm:w-[300px]"
           />
 
-          <select
+          <select 
             value={sortType}
             onChange={(e) => setSortType(e.target.value)}
+            className="input-field w-full sm:w-auto font-bold text-gray-600 bg-white cursor-pointer"
           >
-            <option value="">Sort By: Default</option>
-            <option value="nameAsc">Sort By: Name (A-Z)</option>
+            <option value="">Sort By: Relevance</option>
+            <option value="nameAsc">Name (A-Z)</option>
             <option value="priceLow">Price: Low to High</option>
             <option value="priceHigh">Price: High to Low</option>
           </select>
         </div>
       </div>
-
-      <div className="filters">
-        <span style={{ fontWeight: 700 }}>FILTERS</span>
-        <button
+      
+      <div className="flex flex-wrap items-center gap-3 mb-12">
+        <span className="font-black text-sm tracking-widest text-dark mr-2">CATEGORIES:</span>
+        <button 
           className={`filter-btn ${selectedCategory === '' ? 'active' : ''}`}
           onClick={() => setSelectedCategory('')}
         >
-          All
+          Discover All
         </button>
         {categories.map(cat => (
-          <button
+          <button 
             key={cat}
             className={`filter-btn ${selectedCategory === cat ? 'active' : ''}`}
             onClick={() => setSelectedCategory(cat)}
@@ -100,16 +104,28 @@ function ProductList({ updateCartCount }) {
       </div>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '100px 0' }}>Loading products...</div>
-      ) : (
-        <div className="product-grid">
+        <div className="flex flex-col items-center justify-center py-32 animate-pulse">
+          <div className="w-16 h-16 border-4 border-gray-200 border-t-brand rounded-full animate-spin"></div>
+          <p className="mt-6 font-bold text-gray-400 tracking-wider">Syncing collection...</p>
+        </div>
+      ) : products.length > 0 ? (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {products.map(product => (
-            <ProductCard
-              key={product._id}
-              product={product}
+            <ProductCard 
+              key={product._id} 
+              product={product} 
               onAddToCart={handleAddToCart}
             />
           ))}
+        </div>
+      ) : (
+        <div className="bg-white rounded-2xl w-full py-32 flex flex-col items-center justify-center shadow-sm border border-gray-100">
+          <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-6">
+            <span className="text-4xl">📭</span>
+          </div>
+          <h3 className="text-2xl font-black text-dark mb-2 tracking-tight">Nothing matched your criteria</h3>
+          <p className="text-gray-400 font-medium">Try removing some active filters or modifying your search text.</p>
+          <button onClick={() => {setSearchQuery(''); setSelectedCategory('')}} className="mt-8 btn-primary px-8">Reset All Filters</button>
         </div>
       )}
     </div>

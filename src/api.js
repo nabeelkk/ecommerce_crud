@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://ecommerce-crud-backend.onrender.com/api';
+const API_BASE_URL = 'http://localhost:5001/api';
 
 export const fetchProducts = async (category = '', search = '', sort = '') => {
   let url = `${API_BASE_URL}/products?`;
